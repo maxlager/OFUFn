@@ -5,7 +5,7 @@ import time
 
 #default block
 counter = 0
-tag = ".html"
+default_tag = ".html"
 file_list = []
 default_max_length = 32
 default_split_symbol = "_"
@@ -24,10 +24,10 @@ def ReplaceLineInFile(fileName, sourceText, replaceText):
 
 
 def DelTag(name):
-    if ".h" in name:
-        pos = name.find(".h")
+    if tag[:1] in name:
+        pos = name.find(tag[:1])
         name = name[:pos]
-        name = name + ".html"
+        name = name + tag
     while "'" in name:
         pos = name.find("'")
         name = name[:pos] +"&apos;"+ name[pos+1:]
@@ -66,8 +66,8 @@ def NameCutterNoSplit(long_name, max_length):
     short_name = long_name[0:(max_length-5)]
     while short_name[-1].isalnum() == False:
         short_name = short_name[:-1]
-    if ".h" not in short_name:
-        short_name = short_name + ".html"
+    if tag[:1] not in short_name:
+        short_name = short_name + tag
     return short_name
 
 
@@ -89,10 +89,18 @@ print(os.getcwd())
 default_dir = os.getcwd()
 
 try:
+    user_tag = input("Files tag(default = .html): ")
+    if "." not in user_tag:
+        user_tag = "." + user_tag
+    tag = user_tag
+except ValueError:
+    tag = default_tag
+
+try:
     os.mkdir("new")
 except OSError:
     pass
-    
+
 for file in os.listdir(default_dir):
     if tag in file:
         print("--" + str(file))
